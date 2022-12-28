@@ -3,16 +3,19 @@ import { Grid } from 'semantic-ui-react';
 import { Activity } from '../../../app/models/activity';
 import ActivityList from './ActivityList';
 import ActivityDetails from '../details/ActivityDetails'
-import ActivityFrom from '../form/ActivityForm';
+import ActivityForm from '../form/ActivityForm';
 
 interface Props{
     activities: Activity[];
     selectedActivity: Activity | undefined;
     selectActivity: (id:string) => void;
     cancelSelectActivity: () => void;
+    editMode: boolean;
+    openForm: (id:string) => void;
+    closeForm: () => void;
 }
 
-export default function ActivityDashboard({activities, selectedActivity, selectActivity, cancelSelectActivity}:Props){
+export default function ActivityDashboard({activities, selectedActivity, selectActivity, cancelSelectActivity, editMode, openForm, closeForm}:Props){
     return (
         <Grid>
             <Grid.Column width='10'>
@@ -20,11 +23,18 @@ export default function ActivityDashboard({activities, selectedActivity, selectA
             </Grid.Column>
             <Grid.Column width='6'>
                 {   
-                    selectedActivity 
+                    selectedActivity /* only display ActivityDetails if there is a SelectedActivity */ 
                         &&
-                    <ActivityDetails activity = {selectedActivity} cancelSelectActivity = {cancelSelectActivity}/>
+                    !editMode /* only display ActivityDetails if not in editMode */
+                        &&
+                    <ActivityDetails 
+                        activity = {selectedActivity} 
+                        cancelSelectActivity = {cancelSelectActivity}
+                        openForm = {openForm}
+                    />
                 }
-                <ActivityFrom/>
+                {editMode && /* only display ActivityForm if in editMode */
+                <ActivityForm closeForm = {closeForm} activity={selectedActivity}/>}
             </Grid.Column>
         </Grid>
     )
