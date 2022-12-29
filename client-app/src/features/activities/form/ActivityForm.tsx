@@ -1,4 +1,3 @@
-import { act } from '@testing-library/react';
 import React, { ChangeEvent, useState } from 'react'
 import { Button, Form, Segment } from 'semantic-ui-react'
 import { Activity } from '../../../app/models/activity';
