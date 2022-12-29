@@ -5,11 +5,13 @@ import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import {v4 as uuid} from 'uuid';
 import agent from '../api/agent';
+import LoandingComponent from './LoadingComponent';
 
 function App(): JSX.Element {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity|undefined>(undefined);
   const [editMode,setEditMode] = useState(false);
+  const [loading,setLoading] = useState(true);
 
   useEffect(()=>{
     /*axios.get<Activity[]>('http://localhost:5000/api/activities')*/
@@ -21,6 +23,7 @@ function App(): JSX.Element {
         activities.push(activity);
       })
       setActivities(activities);
+      setLoading(false);
     })
   },[]);
 
@@ -54,7 +57,10 @@ function App(): JSX.Element {
 
     setEditMode(false);
     setSelectedActivity(activity);
-}
+  }
+
+  if (loading) return <LoandingComponent content='Loading app'/>
+
 
   return (
     <Fragment>
