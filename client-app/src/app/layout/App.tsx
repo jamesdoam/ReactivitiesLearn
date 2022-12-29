@@ -12,6 +12,7 @@ function App(): JSX.Element {
   const [selectedActivity, setSelectedActivity] = useState<Activity|undefined>(undefined);
   const [editMode,setEditMode] = useState(false);
   const [loading,setLoading] = useState(true);
+  const [submitting, setSubmitting ] = useState(false);
 
   useEffect(()=>{
     /*axios.get<Activity[]>('http://localhost:5000/api/activities')*/
@@ -49,14 +50,27 @@ function App(): JSX.Element {
   }
 
   function handleCreateOrEditActivity(activity: Activity){
+    setSubmitting(true);
     /* check activity.id, if exist remove it from current activities and add the updated one */
     /* if not exist, append the new activity to current activities */
-    activity.id 
-      ? setActivities([...activities.filter(x=>x.id !== activity.id),activity])
-      : setActivities([...activities,{...activity,id:uuid()}]);
+    if (activity.id) {
+      agent.Activities.update(activity).then(() =>{
+        setActivities([...activities.filter(x=>x.id !== activity.id),activity]);
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false)
+      })
+    } else {
+      activity.id = uuid();
+      agent.Activities.create(activity).then(()=> {
+        setActivities([...activities,activity]);
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false)
+      })
+    }
 
-    setEditMode(false);
-    setSelectedActivity(activity);
+
   }
 
   if (loading) return <LoandingComponent content='Loading app'/>
@@ -76,6 +90,7 @@ function App(): JSX.Element {
           closeForm = {handleFormClose}
           createOrEdit = {handleCreateOrEditActivity}
           deleteActivity = {handleDeleteActivity}
+          submitting = {submitting}
         />
       </Container>        
     </Fragment>
