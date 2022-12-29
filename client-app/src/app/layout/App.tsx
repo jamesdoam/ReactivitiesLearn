@@ -35,6 +35,10 @@ function App(): JSX.Element {
     setEditMode(false);
   }
 
+  function handleDeleteActivity(id: string){
+    setActivities([...activities.filter(x => x.id !== id)]);
+  }
+
   function handleCreateOrEditActivity(activity: Activity){
     /* check activity.id, if exist remove it from current activities and add the updated one */
     /* if not exist, append the new activity to current activities */
@@ -59,6 +63,7 @@ function App(): JSX.Element {
           openForm = {handleFormOpen}
           closeForm = {handleFormClose}
           createOrEdit = {handleCreateOrEditActivity}
+          deleteActivity = {handleDeleteActivity}
         />
       </Container>        
     </Fragment>
