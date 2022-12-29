@@ -15,7 +15,12 @@ function App(): JSX.Element {
     /*axios.get<Activity[]>('http://localhost:5000/api/activities')*/
     agent.Activities.list().then(response => {
       //console.log(response);
-      setActivities(response);
+      let activities: Activity[] = [];
+      response.forEach(activity => {
+        activity.date = activity.date.split('T')[0];
+        activities.push(activity);
+      })
+      setActivities(activities);
     })
   },[]);
 

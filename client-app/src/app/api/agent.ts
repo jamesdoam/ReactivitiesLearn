@@ -1,21 +1,22 @@
 import axios, { AxiosResponse } from 'axios';
+import { Activity } from '../models/activity';
 
 
 axios.defaults.baseURL = 'http://localhost:5000/api';
 /* we pass in the response from axios (type AxiosResponse) */
-const responseBody = (response:AxiosResponse) => response.data;
+const responseBody = <T> (response:AxiosResponse<T>) => response.data;
 
 /* create an object that stores the common requests that we're gonna make to axios */
 const requests = {
-    get: (url:string) => axios.get(url).then(responseBody),
-    post: (url:string, body: {}) => axios.post(url,body).then(responseBody), /*body of type object */
-    put: (url:string, body: {}) => axios.put(url,body).then(responseBody),
-    del: (url:string) => axios.delete(url).then(responseBody),
+    get: <T> (url:string) => axios.get<T>(url).then(responseBody),
+    post: <T>(url:string, body: {}) => axios.post<T>(url,body).then(responseBody), /*body of type object */
+    put: <T>(url:string, body: {}) => axios.put<T>(url,body).then(responseBody),
+    del: <T>(url:string) => axios.delete<T>(url).then(responseBody),
 }
 
 /* create an object that store the requests for our activities */
 const Activities = {
-    list: () => requests.get('/activities') /*baseURL is already in this request url*/
+    list: () => requests.get<Activity[]>('/activities') /*baseURL is already in this request url*/
 }
 
 /*create an object that we're gonna use */
