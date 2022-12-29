@@ -34,6 +34,17 @@ function App(): JSX.Element {
     setEditMode(false);
   }
 
+  function handleCreateOrEditActivity(activity: Activity){
+    /* check activity.id, if exist remove it from current activities and add the updated one */
+    /* if not exist, append the new activity to current activities */
+    activity.id 
+      ? setActivities([...activities.filter(x=>x.id !== activity.id),activity])
+      : setActivities([...activities,activity]);
+
+    setEditMode(false);
+    setSelectedActivity(activity);
+}
+
   return (
     <Fragment>
       <NavBar openForm = {handleFormOpen}/>
@@ -46,6 +57,7 @@ function App(): JSX.Element {
           editMode = {editMode}
           openForm = {handleFormOpen}
           closeForm = {handleFormClose}
+          createOrEdit = {handleCreateOrEditActivity}
         />
       </Container>        
     </Fragment>

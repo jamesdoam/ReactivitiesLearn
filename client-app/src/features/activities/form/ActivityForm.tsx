@@ -1,3 +1,4 @@
+import { act } from '@testing-library/react';
 import React, { ChangeEvent, useState } from 'react'
 import { Button, Form, Segment } from 'semantic-ui-react'
 import { Activity } from '../../../app/models/activity';
@@ -5,9 +6,10 @@ import { Activity } from '../../../app/models/activity';
 interface Props {
     activity: Activity | undefined;
     closeForm: () => void;
+    createOrEdit: (activity:Activity) => void;
 }
 
-export default function ActivityForm({activity:selectedActivity,closeForm}:Props){
+export default function ActivityForm({activity:selectedActivity,closeForm, createOrEdit}:Props){
 
     const initialState = selectedActivity ?? {
         id: '',
@@ -22,13 +24,16 @@ export default function ActivityForm({activity:selectedActivity,closeForm}:Props
     const [activity,setActivity] = useState(initialState);
 
     function handleSubmit(){
-        console.log(activity);
+        /* console.log(activity); */
+        createOrEdit(activity);
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>){
         const {name,value} = event.target;
         setActivity({...activity,[name]:value})
     }
+
+
     return(
         <Segment clearing>
             <Form onSubmit={handleSubmit} autoComplete = 'off' >
