@@ -22,31 +22,12 @@ function App(): JSX.Element {
     activityStore.loadActivities();
   },[activityStore]);
 
-  function handleSelectActivity(id: string) {
-    setSelectedActivity(activities.find(x => x.id === id));
-  }
-
-  function handleCancelSelectedActivity(){
-    setSelectedActivity(undefined);
-  }
-
-  function handleFormOpen(id?:string) {
-    id? handleSelectActivity(id) : handleCancelSelectedActivity();
-    setEditMode(true);
-  }
-
-  function handleFormClose() {
-    setEditMode(false);
-  }
-
   function handleDeleteActivity(id: string){
     setSubmitting(true);
     agent.Activities.delete(id).then(()=>{
       setActivities([...activities.filter(x => x.id !== id)]);
       setSubmitting(false);
-    })
-
-    
+    })    
   }
 
   function handleCreateOrEditActivity(activity: Activity){
@@ -69,25 +50,16 @@ function App(): JSX.Element {
         setSubmitting(false)
       })
     }
-
-
   }
 
   if (activityStore.loadingInitial) return <LoandingComponent content='Loading app'/>
 
-
   return (
     <Fragment>
-      <NavBar openForm = {handleFormOpen}/>
+      <NavBar/>
       <Container style={{marginTop: '7em'}}>
         <ActivityDashboard 
           activities = {activityStore.activities}
-          selectedActivity={selectedActivity}
-          selectActivity={handleSelectActivity}
-          cancelSelectActivity={handleCancelSelectedActivity}
-          editMode = {editMode}
-          openForm = {handleFormOpen}
-          closeForm = {handleFormClose}
           createOrEdit = {handleCreateOrEditActivity}
           deleteActivity = {handleDeleteActivity}
           submitting = {submitting}

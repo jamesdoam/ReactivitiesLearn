@@ -4,7 +4,7 @@ import { Activity } from "../models/activity";
 
 export default class activityStore {
     activities: Activity[] = []; // initialize a list of activities of type Activity
-    selectedActivity: Activity | null = null;
+    selectedActivity: Activity | undefined = undefined;
     editMode = false;
     loading = false;
     loadingInitial = false;
@@ -31,6 +31,23 @@ export default class activityStore {
 
     setLoadingInitial = (state:boolean)=> {
         this.loadingInitial =state;
+    }
+
+    selectActivity = (id:string) => {
+        this.selectedActivity = this.activities.find( a => a.id === id);
+    }
+
+    cancelSelectedActivity = () => {
+        this.selectedActivity = undefined;
+    }
+
+    openForm = (id?: string) => {
+        id ? this.selectActivity(id) : this.cancelSelectedActivity();
+        this.editMode = true; 
+    }
+
+    closeForm = () => {
+        this.editMode = false;    
     }
 
     /* setTitle = () => {
