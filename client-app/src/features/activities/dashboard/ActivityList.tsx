@@ -1,22 +1,19 @@
+import { observer } from 'mobx-react-lite';
 import React, { SyntheticEvent, useState } from 'react'
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
-import { Activity } from '../../../app/models/activity'
 import { useStore } from '../../../app/stores/store';
 
-interface Props {
-    activities: Activity[];
-    deleteActivity: (id:string) => void;
-    submitting:boolean;
-}
+export default observer(function ActivityList() {
+    const {activityStore} = useStore();
+    const {deleteActivity, activities, loading} = activityStore;
 
-export default function ActivityList({activities, deleteActivity, submitting}:Props) {
     const [target,setTarget] = useState(''); /*this is to solve the issue of all Delete buttons loading*/
     function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>,id:string){
         setTarget(e.currentTarget.name);
         deleteActivity(id);
     }
 
-    const {activityStore} = useStore();
+    
     return (
         <Segment>
             <Item.Group divided>
@@ -35,7 +32,7 @@ export default function ActivityList({activities, deleteActivity, submitting}:Pr
                                 <Button onClick={() => activityStore.selectActivity(activity.id)} floated='right' content='View' color='blue'/>
                                 <Button 
                                     name={activity.id}
-                                    loading={submitting && target === activity.id} 
+                                    loading={loading && target === activity.id} 
                                     onClick={(e) => handleActivityDelete(e, activity.id)} 
                                     floated='right' 
                                     content='Delete' 
@@ -49,4 +46,4 @@ export default function ActivityList({activities, deleteActivity, submitting}:Pr
             </Item.Group>
         </Segment>
     )
-}
+})
